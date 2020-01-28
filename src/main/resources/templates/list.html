@@ -19,13 +19,14 @@
             </h4>
 
             <table class="table table-striped">
-                <thead class="thead-inverse">
+                <thead class="thead-dark">
                 <tr>
                     <th>Id</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Date</th>
+                    <th>Create Bill</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </tr>
@@ -37,9 +38,10 @@
                     <td th:text="${client.lastName}"></td>
                     <td th:text="${client.email}"></td>
                     <td th:text="${client.createAt}"></td>
-                    <td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${client.id}" th:text="${'update'}"></a>
+                    <td><a class="btn btn-success btn-xs" th:href="@{'/bill/form/' + ${client.id}}" th:text="'Create Bill'"></a></td>
+                    <td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${client.id}" th:text="${'Update'}"></a>
                     </td>
-                    <td><a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${client.id}" th:text="${'delete'}"
+                    <td><a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${client.id}" th:text="${'Delete'}"
                            onclick="return confirm('Are you sure you want to delete?')"></a></td>
                 </tr>
                 </tbody>

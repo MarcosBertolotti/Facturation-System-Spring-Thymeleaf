@@ -1,6 +1,7 @@
 package com.springboot.app.services;
 
 import com.springboot.app.entities.Client;
+import com.springboot.app.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,5 +17,8 @@ public interface IClientService {
 
     Client findOne(Long id);
 
+    Client fetchByIdWithBills(Long id);
+
     void delete(Long id);
+
 }

@@ -59,7 +59,7 @@ public class ClientController {
     @GetMapping("/see/{id}")
     public String see(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
-        Client client = clientService.findOne(id);
+        Client client = clientService.fetchByIdWithBills(id); //clientService.findOne(id);
 
         if (client == null) {
             flash.addFlashAttribute("error", "Client not exists");
@@ -72,7 +72,7 @@ public class ClientController {
         return "see";
     }
 
-    @GetMapping("/list")
+    @GetMapping({"/list", "/", ""})
     public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 
         Pageable pageRequest = PageRequest.of(page, 5);

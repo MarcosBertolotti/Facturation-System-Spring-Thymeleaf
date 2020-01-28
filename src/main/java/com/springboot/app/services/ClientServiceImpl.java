@@ -1,7 +1,9 @@
 package com.springboot.app.services;
 
 import com.springboot.app.entities.Client;
+import com.springboot.app.entities.Product;
 import com.springboot.app.repository.IClientDao;
+import com.springboot.app.repository.IProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,9 +47,17 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Client fetchByIdWithBills(Long id) {
+
+        return clientDao.fetchByIdWithBills(id);
+    }
+
+    @Override
     @Transactional
     public void delete(Long id){
 
         clientDao.deleteById(id);
     }
+
 }
