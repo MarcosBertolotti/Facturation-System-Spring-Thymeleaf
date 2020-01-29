@@ -1,7 +1,10 @@
 package com.springboot.app.configurations;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.nio.file.Paths;
@@ -20,4 +23,15 @@ public class MvcConfig implements WebMvcConfigurer {
         .addResourceLocations(resourcePath);
     }
     */
+
+    // debe llamarse asi. Metodo Para registrar un controlador de vista. que serian controladores parametrizables o estaticos que cargan la vista sin logica de controlador
+    public void addViewControllers(ViewControllerRegistry registry){
+
+        registry.addViewController("/error_403").setViewName("error_403"); // ruta url, getMapping
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
