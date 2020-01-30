@@ -4,6 +4,8 @@
 
 <body>
 
+<div id="i18n_delete_client" th:text="#{text.client.deleteOk}" style="display: none;"></div>
+
 <header th:replace="layout/layout :: header"></header>
 
 <div class="container py-4">
@@ -14,7 +16,7 @@
 
             <h4 class="card-title">
                 <a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs"
-                   th:href="@{'/bill/form/' + ${client.id}}" th:text="'Create Bill'"></a>
+                   th:href="@{'/bill/form/' + ${client.id}}" th:text="#{text.client.bill.create}"></a>
             </h4>
 
             <img th:if="${#strings.length(client.photo) > 0}" class="img-thumbnail rounded float-left"
@@ -30,18 +32,18 @@
 
             <div th:if="${#lists.isEmpty(client.bills)}"
                  class="alert alert-info my-4"
-                 th:text="'Client ' + ${client.firstName} + ' ' + ${client.lastName} + ' hasn\'t bills assigned'">
+                 th:text="#{text.client.detail.no.bill}">
             </div>
 
             <table th:if="${not #lists.isEmpty(client.bills)}" class="table table-bordered table-striped my-4">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Folio</th>
-                    <th>Description</th>
-                    <th>Date</th>
-                    <th>Total</th>
-                    <th sec:authorize="hasRole('ROLE_ADMIN')">See</th>
-                    <th sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
+                    <th th:text="#{text.client.bill.folio}">Folio</th>
+                    <th th:text="#{text.client.bill.description}">Description</th>
+                    <th th:text="#{text.client.bill.date}">Date</th>
+                    <th th:text="#{text.client.bill.total}">Total</th>
+                    <th th:text="#{text.client.bill.detail}" sec:authorize="hasRole('ROLE_ADMIN')">See</th>
+                    <th th:text="#{text.client.bill.delete}" sec:authorize="hasRole('ROLE_ADMIN')">Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -52,11 +54,11 @@
                     <td th:text="${bill.total}"></td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
                         <a class="btn btn-primary btn-xs" th:href="@{'/bill/see/' + ${bill.id}}"
-                           th:text="'Details'"></a>
+                           th:text="#{text.client.bill.detail}"></a>
                     </td>
                     <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-danger btn-xs" th:href="@{'/bill/delete/' + ${bill.id}}" th:text="'Delete'"
-                           onclick="return confirm('Are you sure you want to delete the Bill?');"></a>
+                        <a class="btn btn-danger btn-xs" th:href="@{'/bill/delete/' + ${bill.id}}" th:text="#{text.client.bill.delete}"
+                           onclick="return confirm(document.getElementById('i18n_delete_client').innerHTML);"></a>
                     </td>
                 </tr>
                 </tbody>

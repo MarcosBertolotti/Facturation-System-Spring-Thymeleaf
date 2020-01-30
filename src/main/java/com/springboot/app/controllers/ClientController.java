@@ -7,6 +7,7 @@ import com.springboot.app.util.paginator.PageRender;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
@@ -38,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -53,6 +51,9 @@ public class ClientController {
 
     @Autowired
     private IIUploadFileService uploadFileService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Secured("ROLE_USER")
     @GetMapping("/uploads/{filename:.+}")       // filename:.+ = expresion regular permite que spring no borre o trunque la extension del archivo.
@@ -73,36 +74,27 @@ public class ClientController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/see/{id}")
-    public String see(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+    public String see(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash, Locale locale) {
 
         Client client = clientService.fetchByIdWithBills(id); //clientService.findOne(id);
 
         if (client == null) {
-            flash.addFlashAttribute("error", "Client not exists");
+            flash.addFlashAttribute("error", messageSource.getMessage("text.client.flash.db.error", null, locale));
             return "redirect:/list";
         }
 
         model.put("client", client);
-        model.put("title", "Client Detail" + client.getFirstName());
+        model.put("title", messageSource.getMessage("text.client.detail.title", null, locale));
 
         return "see";
     }
 
     @GetMapping({"/list", "/"})
     public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
-                       Authentication authentication, HttpServletRequest request) {
+                       Authentication authentication, HttpServletRequest request, Locale locale) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-/*
-        if(auth != null){
-            logger.info("Hello authenticated user, your username is: " + auth.getName());
-        }
-        if(hasRole("ROLE_ADMIN")){
-            logger.info("Hello " + auth.getName() + ", you have Admin role access!");
-        }else{
-            logger.info("Hello " + auth.getName() + ", you haven't Admin role access!");
-        }
-*/
+
         SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
 
         if(securityContext.isUserInRole("ROLE_ADMIN")){ // o request.isUserInRole("ROLE_ADMIN")
@@ -111,14 +103,13 @@ public class ClientController {
             logger.info("Hello " + auth.getName() + ", you haven't Admin role access!");
         }
 
-
         Pageable pageRequest = PageRequest.of(page, 5);
 
         Page<Client> clients = clientService.findAll(pageRequest);
 
         PageRender<Client> pageRender = new PageRender<>("/list", clients);
 
-        model.addAttribute("title", "Client List");
+        model.addAttribute("title", messageSource.getMessage("text.client.list.title", null, locale));
         model.addAttribute("clients", clients);
         model.addAttribute("page", pageRender);
 
@@ -127,52 +118,51 @@ public class ClientController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/form")
-    public String create(Map<String, Object> model) {
+    public String create(Map<String, Object> model, Locale locale) {
 
         Client client = new Client();
 
         model.put("client", client);
-        model.put("title", "Client Form");
+        model.put("title", messageSource.getMessage("text.client.form.title.create", null, locale));
 
         return "form";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/form/{id}")
-    public String update(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+    public String update(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash, Locale locale) {
 
         Client client = null;
 
         if (id > 0) {
             client = clientService.findOne(id);
             if (client == null) {
-                flash.addFlashAttribute("error", "Client ID doesn't exist in the BD!");
+                flash.addFlashAttribute("error", messageSource.getMessage("text.client.flash.db.error", null, locale));
                 return "redirect:/list";
             }
         } else {
-            flash.addFlashAttribute("error", "Client ID can't be 0!");
+            flash.addFlashAttribute("error", messageSource.getMessage("text.client.flash.id.error", null, locale));
             return "redirect:/list";
         }
 
         model.put("client", client);
-        model.put("title", "Update Client");
+        model.put("title", messageSource.getMessage("text.client.form.title.update", null, locale));
 
         return "form";
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/form")
-    public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, SessionStatus status, RedirectAttributes flash) {
+    public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, SessionStatus status, RedirectAttributes flash, Locale locale) {
 
         if (result.hasErrors()) {
-            model.addAttribute("title", "Client Form");
+            model.addAttribute("title", messageSource.getMessage("text.client.form.title", null, locale));
             return "form";
         }
 
         if (!photo.isEmpty()) {
 
             if (client.getId() != null && client.getId() > 0 && client.getPhoto() != null && client.getPhoto().length() > 0) {
-
                 uploadFileService.delete(client.getPhoto());             // para eliminar la foto antigua cuando se edita
             }
 
@@ -184,12 +174,12 @@ public class ClientController {
                 e.printStackTrace();
             }
 
-            flash.addFlashAttribute("info", "You have uploaded correctly '" + uniqueFileName + "'");
+            flash.addFlashAttribute("info", messageSource.getMessage("text.client.flash.photo.upload.success", null, locale) + ' '+ uniqueFileName + "'");
 
             client.setPhoto(uniqueFileName);
         }
 
-        String messageFlash = (client.getId() != null) ? "Client updated successfully!" : "Client created successfully!";
+        String messageFlash = (client.getId() != null) ? messageSource.getMessage("text.client.flash.update.success", null, locale) : messageSource.getMessage("text.client.flash.create.success", null, locale);
 
         clientService.save(client);
         status.setComplete(); // elimina el objeto cliente de la sesion.
@@ -200,51 +190,20 @@ public class ClientController {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+    public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash, Locale locale) {
 
         if (id > 0) {
             Client client = clientService.findOne(id);
 
             clientService.delete(id);
-            flash.addFlashAttribute("success", "Client successfully removed!");
+            flash.addFlashAttribute("success", messageSource.getMessage("text.client.flash.delete.success", null, locale));
 
             if (uploadFileService.delete(client.getPhoto())) {
-                flash.addFlashAttribute("info", "Photo " + client.getPhoto() + " successfully removed!");
+                flash.addFlashAttribute("info", messageSource.getMessage("text.client.flash.photo.delete.success", null, locale));
             }
         }
         return "redirect:/list";
     }
-
-    // remplazada por SecurityContextHolderAwareRequestWrapper
-    /*
-    private boolean hasRole(String role) {
-
-        SecurityContext context =  SecurityContextHolder.getContext(); // para poder obtener los roles (authorities)
-
-        if(context == null){ // si es nulo, no tiene accesso
-            return false;
-        }
-
-        Authentication auth = context.getAuthentication();
-
-        if(auth == null){
-            return false;
-        }
-
-        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities(); // cualquiero clase Role o que representa un Role en nuestra app tiene que implementar esta interfaz. ? extends, es una coleccion de cualquier tipo de objeto que implementa o herede de esta interfaz
-
-        //return authorities.stream().anyMatch(new SimpleGrantedAuthority(role)::equals); // otra opcion
-        return authorities.contains(new SimpleGrantedAuthority(role));
-        /*
-        for(GrantedAuthority authority: authorities) {
-            if(role.equals(authority.getAuthority())){
-                logger.info("Hello user " + auth.getName() + ", you role is: " + authority.getAuthority());
-                return true;
-            }
-        }
-        return false;
-        */
-  //  }
 
 
 }

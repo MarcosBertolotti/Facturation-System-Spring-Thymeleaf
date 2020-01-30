@@ -41,7 +41,7 @@ public class Bill implements Serializable {
     @Column(name = "bill_id")
     private Long id;
 
-    @NotEmpty(message = "Description is required!")
+    @NotEmpty
     private String description;
 
     private String observation;

@@ -15,20 +15,20 @@
         <div class="card-body">
 
             <h4 class="card-title">
-                <a class="btn btn-light btn-xs" th:href="@{'/see/' + ${bill.client.id}}" th:text="'&laquo; Return'"></a>
+                <a class="btn btn-light btn-xs" th:href="@{'/see/' + ${bill.client.id}}" th:utext="#{text.global.go.back}"></a>
             </h4>
 
             <form th:action="@{/bill/form/}" th:object="${bill}" method="post">
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label" th:text="'Client'"></label>
+                    <label class="col-sm-2 col-form-label" th:text="#{text.bill.form.client}"></label>
                     <div class="col-sm-6">
                         <input th:value="${bill.client.firstName} + ' ' + ${bill.client.lastName}" class="form-control" disabled="disabled">
                     </div>
                 </div>
 
                 <div class="form-group row">
-                    <label for="description" class="col-sm-2 col-form-label" th:text="'Description'"></label>
+                    <label for="description" class="col-sm-2 col-form-label" th:text="#{text.client.bill.detail}"></label>
                     <div class="col-sm-6">
                         <input type="text" id="description" th:field="*{description}" class="form-control" th:errorclass="'form-control is-invalid'">
                         <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="observation" class="col-sm-2 col-form-label" th:text="'Observation'"></label>
+                    <label for="observation" class="col-sm-2 col-form-label" th:utext="#{text.bill.form.observation}"></label>
                     <div class="col-sm-6">
                         <textarea th:field="*{observation}" id="observation" class="form-control"></textarea>
                     </div>
@@ -44,7 +44,7 @@
 
                 <!-- va a realizar una peticion asincrona con ajax jquery -->
                 <div class="form-group row">
-                    <label for="search_product" class="col-sm-2 col-form-label" th:text="'Search Product'"></label>
+                    <label for="search_product" class="col-sm-2 col-form-label" th:text="#{text.bill.form.search}"></label>
                     <div class="col-sm-6">
                         <input type="text" id="search_product" name="search_product" class="form-control">
                     </div>
@@ -55,11 +55,11 @@
                 <table id="loadItemProducts" class="table table-sm table-striped table-hover">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Delete</th>
+                            <th th:text="#{text.bill.form.item.name}">Name</th>
+                            <th th:text="#{text.bill.form.item.price}">Price</th>
+                            <th th:text="#{text.bill.form.item.quantity}">Quantity</th>
+                            <th th:text="#{text.bill.form.item.total}">Total</th>
+                            <th th:text="#{text.bill.form.item.delete}">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +67,9 @@
                     </tbody>
                 </table>
 
-                <h5>Total <span class="badge badge-secondary" id="grand_total"></span></h5>
+                <h5><span th:text="#{text.bill.form.total} ">Total </span>
+                    <span class="badge badge-secondary" id="grand_total"></span>
+                </h5>
 
                 <div class="form-group row">
                     <div class="col-sm-6">

@@ -13,17 +13,17 @@
         <div class="card-header" th:text="${title}"></div>
 
         <div class="card-body">
-
+<!--
             <div th:object="${client}" th:remove="tag">
                 <ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                     <li th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
                 </ul>
             </div>
-
+-->
             <form th:action="@{/form}" th:object="${client}" method="post" enctype="multipart/form-data"> <!-- enctype = permite enviar archivos como data en el request en una peticion http -->
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">First Name</label>
+                    <label class="col-sm-2 col-form-label" th:text="#{text.client.firstName}">First Name</label>
                     <div class="col-sm-6">
                         <input type="text" th:field="*{firstName}" class="form-control"
                                th:errorclass="'form-control alert-danger'">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Last Name</label>
+                    <label class="col-sm-2 col-form-label" th:text="#{text.client.lastName}">Last Name</label>
                     <div class="col-sm-6">
                         <input type="text" th:field="*{lastName}" class="form-control"
                                th:errorclass="'form-control alert-danger'">
@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Email</label>
+                    <label class="col-sm-2 col-form-label" th:text="#{text.client.email}">Email</label>
                     <div class="col-sm-6">
                         <input type="text" th:field="*{email}" class="form-control"
                                th:errorclass="'form-control alert-danger'">
@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-sm-2 col-form-label">Date</label>
+                    <label class="col-sm-2 col-form-label" th:text="#{text.client.createAt}">Date</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" th:field="*{createAt}"
                                th:errorclass="'form-control alert-danger'">
@@ -60,14 +60,14 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="file" class="col-sm-2 col-form-label">Photo</label>
+                    <label for="file" class="col-sm-2 col-form-label" th:text="#{text.client.photo}">Photo</label>
                     <div class="col-sm-6">
                         <input type="file" name="file" id="file" class="form-control">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <input type="submit" value="Create Client" class="btn btn-secondary">
+                        <input type="submit" th:value="${title}" class="btn btn-secondary">
                     </div>
                 </div>
 

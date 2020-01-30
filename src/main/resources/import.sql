@@ -43,3 +43,12 @@ INSERT INTO items_bills (quantity, bill_id, product_id) VALUES(1, 1, 7);
 
 INSERT INTO bills (description, observation, client_id, create_at) VALUES('Bike bill', 'Some important note!', 1, NOW());
 INSERT INTO items_bills (quantity, bill_id, product_id) VALUES(3, 2, 6);
+
+/* Users */
+insert into users(username, password, enabled) values ('marcos', '$2a$10$ot6GriZe7cEEpe1bcxP8/O9AD9xbOGUrHlAhqO.pzETxyZlkDTDgW', 1);
+insert into users(username, password, enabled) values ('admin', '$2a$10$h2sSgfCL8Or/KIRB0mrk5.CM0WKJirnjCkjSMIqs67J725/XQ1xpm', 1);
+
+/* Roles */
+insert into authorities (user_id, authority) values (1, 'ROLE_USER');
+insert into authorities (user_id, authority) values (2, 'ROLE_USER');
+insert into authorities (user_id, authority) values (2, 'ROLE_ADMIN');

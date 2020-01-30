@@ -1,6 +1,5 @@
 package com.springboot.app.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,20 +39,20 @@ public class Client implements Serializable { // serializable recomendado para a
     private Long id;
 
     @Column(name="first_name")
-    @NotEmpty(message = "First Name is required!")
+    @NotEmpty
     @Size(min=2,max=20)
     private String firstName;
 
     @Column(name="last_name")
-    @NotEmpty(message = "Last Name is required!")
+    @NotEmpty
     private String lastName;
 
-    @NotEmpty(message = "Email is required!")
-    @Email(message = "Email not valid!")
+    @NotEmpty
+    @Email
     private String email;
 
     @Column(name="create_at")
-    @NotNull(message = "Date can't be null!")
+    @NotNull
     @Temporal(TemporalType.DATE) // indica el formato en que se va a guardar esta fecha de java en la tabla de bd. DATE/TIME/TIMESTAMP
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date createAt;

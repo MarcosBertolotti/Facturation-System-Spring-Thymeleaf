@@ -7,10 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Stream;
-
 @SpringBootApplication
 public class SpringBootDataJpaApplication implements CommandLineRunner {
 
@@ -29,12 +25,13 @@ public class SpringBootDataJpaApplication implements CommandLineRunner {
 
 		uploadFileService.deleteAll(); // borra carpeta upload
 		uploadFileService.init(); // crea carpeta upload
-
+/*
         String password = "12345";
 
         for(int i = 0; i<2; i++) {
             String bcryptPassword = passwordEncoder.encode(password);
             System.out.println(bcryptPassword);
         }
+        */
 	}
 }
