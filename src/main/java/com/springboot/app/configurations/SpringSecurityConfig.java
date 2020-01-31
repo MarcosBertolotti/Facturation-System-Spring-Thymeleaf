@@ -36,7 +36,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter { // adap
         // spring ejecuta un interceptor antes de cargar una pagina (aceptar peticion) y valida los permisos
 
         http.authorizeRequests()
-                .antMatchers("/", "/css/**", "/js/**", "/images/**", "/list", "/locale").permitAll() // asignamos nuestras rutas publicas para el acceso de cualquier rol. (ruta raiz, recursos staticos, acceso publico)
+                .antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale").permitAll() // asignamos nuestras rutas publicas para el acceso de cualquier rol. (ruta raiz, recursos staticos, acceso publico)
                 //.antMatchers("/see/**").hasAnyRole("USER")
                 //.antMatchers("/uploads/**").hasAnyRole("USER")
                 //.antMatchers("/form/**").hasAnyRole("ADMIN")
