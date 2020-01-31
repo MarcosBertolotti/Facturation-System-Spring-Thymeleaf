@@ -1,5 +1,6 @@
 package com.springboot.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +31,9 @@ public class ItemBill {
     @NotNull
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) // EAGER trae los productos inmediatamente, juntos con los ItemBIll trae los products. poco redundante. En este caso es aceptable usar EAGER porque siempre necesitamos el producto para mostrar la linea
     @JoinColumn(name="product_id", referencedColumnName = "product_id") // por defecto hace esto no es necesario
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ignora esos atributos
     private Product product;
 
     private static final long serialVersionUID = 1L;

@@ -1,6 +1,6 @@
 package com.springboot.app.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlTransient;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,7 +54,7 @@ public class Bill implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY) // muchas facturas, un cliente. fetch = forma de obtener los datos de la relacion. LAZY = carga perezosa, hace la consulta solo cuando se le llama. EAGER = trae toda la consulta de una sola vez. incluyendo al cliente
     @JoinColumn(name = "client_id", referencedColumnName = "client_id") // OPCIONAL, lo hace automaticamente el manyToOne
-    @JsonIgnore // PROBANDO DESPUES VER
+    @JsonBackReference // parte posterior de la relacion, se omite de la serializacion, no la mostrara
     private Client client;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // una factura y muchos item factura. orphanRemoval = elimina items huerfanos que no estan asociados a ningun bill.
@@ -77,11 +78,16 @@ public class Bill implements Serializable {
 
         Double total = 0.0;
 
-        total = items.stream().mapToDouble(item -> item.calculateAmount()).sum();
+        total = items.stream().mapToDouble(ItemBill::calculateAmount).sum();
 /*
         for(int i=0; i < items.size(); i++){
             total += items.get(i).calculateAmount();
         }*/
         return total;
+    }
+
+    @XmlTransient // lo omite en la serializacion, no lo incluye en el xml
+    public Client getClient(){
+        return this.client;
     }
 }

@@ -1,5 +1,7 @@
 package com.springboot.app.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,9 +57,12 @@ public class Client implements Serializable { // serializable recomendado para a
     @NotNull
     @Temporal(TemporalType.DATE) // indica el formato en que se va a guardar esta fecha de java en la tabla de bd. DATE/TIME/TIMESTAMP
     @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date createAt;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) // cascade all = las operaciones delete,persist se van a realizar en cadena. cuando el cliente guarde varias facturas y el cliente se persiste, tambien persiste los elementos hijos.
+    //@JsonIgnore
+    @JsonManagedReference // parte delantera que se serializa en el json, la muestra
     private List<Bill> bills;
 
     private String photo;

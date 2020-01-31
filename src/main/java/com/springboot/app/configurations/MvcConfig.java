@@ -2,6 +2,7 @@ package com.springboot.app.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -49,6 +50,14 @@ public class MvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) { // registramos el interceptor
 
         registry.addInterceptor(localeChangeInterceptor());
+    }
+
+
+    @Bean
+    public Jaxb2Marshaller jaxb2Marshaller(){ // para serializar/convertir nuestras clases/objeto a xml
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+         marshaller.setClassesToBeBound(new Class[] {com.springboot.app.view.xml.ClientList.class});
+         return marshaller;
     }
 
 }
